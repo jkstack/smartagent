@@ -1,0 +1,20 @@
+--- cpu_windows.go	2021-09-30 15:41:55.831724533 +0800
++++ cpu_windows.fix.go	2021-09-30 15:43:02.372647018 +0800
+@@ -114,7 +114,7 @@ func InfoWithContext(ctx context.Context
+ 	var ret []InfoStat
+ 	var dst []Win32_ProcessorWithoutLoadPct
+ 	q := wmi.CreateQuery(&dst, "")
+-	q = strings.ReplaceAll(q, "Win32_ProcessorWithoutLoadPct", "Win32_Processor")
++	q = strings.Replace(q, "Win32_ProcessorWithoutLoadPct", "Win32_Processor", -1)
+ 	if err := common.WMIQueryWithContext(ctx, q, &dst); err != nil {
+ 		return ret, err
+ 	}
+@@ -253,7 +253,7 @@ func CountsWithContext(ctx context.Conte
+ 	// for the time being, try with unreliable and slow WMI call…
+ 	var dst []Win32_ProcessorWithoutLoadPct
+ 	q := wmi.CreateQuery(&dst, "")
+-	q = strings.ReplaceAll(q, "Win32_ProcessorWithoutLoadPct", "Win32_Processor")
++	q = strings.Replace(q, "Win32_ProcessorWithoutLoadPct", "Win32_Processor", -1)
+ 	if err := common.WMIQueryWithContext(ctx, q, &dst); err != nil {
+ 		return 0, err
+ 	}

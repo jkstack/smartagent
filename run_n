@@ -1,0 +1,17 @@
+#!/bin/sh
+ARGC=$#
+if [ $ARGC -eq 0 ]; then
+    echo "./run_n <count>"
+    exit 1
+fi
+docker ps -f 'ancestor=smartagent' --format '{{.ID}}'|xargs docker rm -f 2>/dev/null
+for i in `seq $1`
+do
+    AGENT_ID=`printf agent-%02d $i`
+    docker run -d \
+        -e AGENT_ID=$AGENT_ID \
+        -e SERVER=172.17.0.1:13081 \
+        -p 8090 \
+        --name $AGENT_ID \
+        smartagent
+done

@@ -1,0 +1,14 @@
+#!/bin/sh
+VERSION="2.0.0"
+BRANCH=`git rev-parse --abbrev-ref HEAD`
+HASH=`git log -n1 --pretty=format:%h`
+REVERSION=`git log --oneline|wc -l|tr -d ' '`
+BUILD_TIME=`date +'%Y-%m-%d %H:%M:%S'`
+LDFLAGS="-X 'main.gitBranch=$BRANCH'
+-X 'main.gitHash=$HASH'
+-X 'main.gitReversion=$REVERSION'
+-X 'main.buildTime=$BUILD_TIME'
+-X 'main.version=$VERSION'"
+
+mkdir -p bin
+go build -mod vendor -ldflags "$LDFLAGS" -o bin/agent code/*.go

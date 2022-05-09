@@ -1,0 +1,5 @@
+#!/bin/sh
+./build
+# sudo rm -fr plugins
+sudo killall agent
+sudo ./bin/agent -conf conf/client.conf

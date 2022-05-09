@@ -1,0 +1,108 @@
+--- host.go	2022-02-25 13:55:08.491661906 +0800
++++ host.fix.go	2022-02-25 13:55:53.250103128 +0800
+@@ -3,8 +3,8 @@ package host
+ import (
+ 	"context"
+ 	"encoding/json"
+-	"errors"
+ 	"os"
++	"reflect"
+ 	"runtime"
+ 	"time"
+ 
+@@ -64,6 +64,38 @@ func Info() (*InfoStat, error) {
+ 	return InfoWithContext(context.Background())
+ }
+ 
++func Is(err, target error) bool {
++	if target == nil {
++		return err == target
++	}
++
++	isComparable := reflect.TypeOf(target).Comparable()
++	for {
++		if isComparable && err == target {
++			return true
++		}
++		if x, ok := err.(interface{ Is(error) bool }); ok && x.Is(target) {
++			return true
++		}
++		// TODO: consider supporting target.Is(err). This would allow
++		// user-definable predicates, but also may allow for coping with sloppy
++		// APIs, thereby making it easier to get away with them.
++		if err = Unwrap(err); err == nil {
++			return false
++		}
++	}
++}
++
++func Unwrap(err error) error {
++	u, ok := err.(interface {
++		Unwrap() error
++	})
++	if !ok {
++		return nil
++	}
++	return u.Unwrap()
++}
++
+ func InfoWithContext(ctx context.Context) (*InfoStat, error) {
+ 	var err error
+ 	ret := &InfoStat{
+@@ -71,47 +103,47 @@ func InfoWithContext(ctx context.Context
+ 	}
+ 
+ 	ret.Hostname, err = os.Hostname()
+-	if err != nil && !errors.Is(err, common.ErrNotImplementedError) {
++	if err != nil && !Is(err, common.ErrNotImplementedError) {
+ 		return nil, err
+ 	}
+ 
+ 	ret.Platform, ret.PlatformFamily, ret.PlatformVersion, err = PlatformInformationWithContext(ctx)
+-	if err != nil && !errors.Is(err, common.ErrNotImplementedError) {
++	if err != nil && !Is(err, common.ErrNotImplementedError) {
+ 		return nil, err
+ 	}
+ 
+ 	ret.KernelVersion, err = KernelVersionWithContext(ctx)
+-	if err != nil && !errors.Is(err, common.ErrNotImplementedError) {
++	if err != nil && !Is(err, common.ErrNotImplementedError) {
+ 		return nil, err
+ 	}
+ 
+ 	ret.KernelArch, err = KernelArch()
+-	if err != nil && !errors.Is(err, common.ErrNotImplementedError) {
++	if err != nil && !Is(err, common.ErrNotImplementedError) {
+ 		return nil, err
+ 	}
+ 
+ 	ret.VirtualizationSystem, ret.VirtualizationRole, err = VirtualizationWithContext(ctx)
+-	if err != nil && !errors.Is(err, common.ErrNotImplementedError) {
++	if err != nil && !Is(err, common.ErrNotImplementedError) {
+ 		return nil, err
+ 	}
+ 
+ 	ret.BootTime, err = BootTimeWithContext(ctx)
+-	if err != nil && !errors.Is(err, common.ErrNotImplementedError) {
++	if err != nil && !Is(err, common.ErrNotImplementedError) {
+ 		return nil, err
+ 	}
+ 
+ 	ret.Uptime, err = UptimeWithContext(ctx)
+-	if err != nil && !errors.Is(err, common.ErrNotImplementedError) {
++	if err != nil && !Is(err, common.ErrNotImplementedError) {
+ 		return nil, err
+ 	}
+ 
+ 	ret.Procs, err = numProcs(ctx)
+-	if err != nil && !errors.Is(err, common.ErrNotImplementedError) {
++	if err != nil && !Is(err, common.ErrNotImplementedError) {
+ 		return nil, err
+ 	}
+ 
+ 	ret.HostID, err = HostIDWithContext(ctx)
+-	if err != nil && !errors.Is(err, common.ErrNotImplementedError) {
++	if err != nil && !Is(err, common.ErrNotImplementedError) {
+ 		return nil, err
+ 	}
+ 
