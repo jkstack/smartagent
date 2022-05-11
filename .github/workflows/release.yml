@@ -1,4 +1,4 @@
-name: smartagent
+name: smartagent release
 
 on:
   push:
@@ -17,6 +17,6 @@ jobs:
         uses: jkstack/smartagent-build@master
 
       - name: release
-        use: jkstack/smartagent-release@master
+        uses: jkstack/smartagent-release@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

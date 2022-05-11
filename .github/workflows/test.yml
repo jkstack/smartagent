@@ -1,4 +1,4 @@
-name: smartagent
+name: smartagent build test
 
 on:
   push:
