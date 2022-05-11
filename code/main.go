@@ -22,7 +22,7 @@ var (
 )
 
 func showVersion() {
-	fmt.Printf("程序版本: %s\n代码版本: %s.%s.%s\n时间: %s\ngo版本: %s\n",
+	fmt.Printf("version: %s\ncode version: %s.%s.%s\nbuild time: %s\ngo version: %s\n",
 		version,
 		gitBranch, gitHash, gitReversion,
 		buildTime,
@@ -30,10 +30,10 @@ func showVersion() {
 }
 
 func main() {
-	cf := flag.String("conf", "", "配置文件所在路径")
-	ver := flag.Bool("version", false, "查看版本号")
-	act := flag.String("action", "", "install、uninstall或reset")
-	server := flag.String("server", "", "服务器地址，格式：<ip>:<port>")
+	cf := flag.String("conf", "", "config file dir")
+	ver := flag.Bool("version", false, "show version info")
+	act := flag.String("action", "", "install, uninstall or reset")
+	server := flag.String("server", "", "server addr, only support for action=reset, eg: <ip>:<port>")
 	flag.Parse()
 
 	if *ver {
@@ -42,14 +42,14 @@ func main() {
 	}
 
 	if len(*cf) == 0 {
-		fmt.Println("缺少-conf参数")
+		fmt.Println("missing -conf argument")
 		os.Exit(1)
 	}
 
 	if len(*server) > 0 {
 		_, _, err := net.SplitHostPort(*server)
 		if err != nil {
-			fmt.Printf("-server参数格式错误：%s\n", err)
+			fmt.Printf("invalid -server argument: %s\n", err)
 			os.Exit(1)
 		}
 	}
