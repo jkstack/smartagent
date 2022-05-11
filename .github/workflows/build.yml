@@ -1,4 +1,4 @@
-name: test-actions
+name: smartagent
 
 on:
   push:
