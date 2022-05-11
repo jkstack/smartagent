@@ -93,6 +93,7 @@ prepare:
 		$(OUTDIR)/$(VERSION)/opt/smartagent/conf
 	cp conf/client.conf $(OUTDIR)/$(VERSION)/opt/smartagent/conf/client.conf
 	echo $(VERSION) > $(OUTDIR)/$(VERSION)/opt/smartagent/.version
+	go mod vendor
 distclean:
 	rm -fr $(OUTDIR) src
 docker: distclean linux.amd64
