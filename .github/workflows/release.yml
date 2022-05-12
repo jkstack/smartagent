@@ -1,4 +1,4 @@
-name: smartagent release
+name: release
 
 on:
   push:
