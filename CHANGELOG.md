@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2.0.1
+
+1. 修复linux系统下cgroups配置无法更新的问题
+2. 修正windows xp系统下无法注册系统服务的问题
+3. 修正windows系统下退出时没有杀死插件进程的问题
+4. 修正msi安装包中的配置文件路径问题
+
 ## 2.0.0
 
 1. 通信协议升级为websocket+json
