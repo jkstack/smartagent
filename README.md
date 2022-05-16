@@ -1,9 +1,9 @@
 # SmartAgent Agent
 
 [![smartagent](https://github.com/jkstack/smartagent/actions/workflows/build.yml/badge.svg)](https://github.com/jkstack/smartagent/actions/workflows/build.yml)
-[![go-mod](https://img.shields.io/github/go-mod/go-version/jkstack/build)](https://github.com/jkstack/build)
-[![license](https://img.shields.io/github/license/jkstack/build)](https://www.gnu.org/licenses/agpl-3.0.txt)
-[![platform](https://img.shields.io/badge/platform-linux%20%7C%20windows-lightgrey.svg)](https://github.com/jkstack/build)
+[![go-mod](https://img.shields.io/github/go-mod/go-version/jkstack/smartagent)](https://github.com/jkstack/smartagent)
+[![license](https://img.shields.io/github/license/jkstack/smartagent)](https://www.gnu.org/licenses/agpl-3.0.txt)
+[![platform](https://img.shields.io/badge/platform-linux%20%7C%20windows-lightgrey.svg)](https://github.com/jkstack/smartagent)
 
 SmartAgent 采用C/S架构的模型来运行，两者之间采用ws协议保障在企业级网络策略中通信能力。为提高可扩展性，在Agent端使用多进程的方式运行多种插件，来提供业务方的扩展能力。
 
