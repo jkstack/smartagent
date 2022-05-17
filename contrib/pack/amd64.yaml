@@ -1,0 +1,17 @@
+name: smartagent
+arch: amd64
+platform: linux
+#version: 2.0.0
+maintainer: liwenchao <liwenchao@jkstack.com>
+description: jkstack smartagent
+contents:
+  - src: $WORKDIR/opt/smartagent/bin/smartagent
+    dst: /opt/smartagent/bin/smartagent
+  - src: $WORKDIR/opt/smartagent/conf/client.conf
+    dst: /opt/smartagent/conf/client.conf
+    type: config|noreplace
+  - src: $WORKDIR/opt/smartagent/.version
+    dst: /opt/smartagent/.version
+scripts:
+  postinstall: contrib/pack/postinstall
+  preremove: contrib/pack/preremove

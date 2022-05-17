@@ -24,17 +24,25 @@ linux.amd64: prepare
 	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags $(LDFLAGS) \
 		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent code/*.go
 	cd $(OUTDIR)/$(VERSION) && fakeroot tar -czvf smartagent_$(VERSION)_linux_amd64.tar.gz \
-		--warning=no-file-changed *
+		--warning=no-file-changed opt
+	go run contrib/pack/release.go -o $(OUTDIR)/$(VERSION) \
+		-conf contrib/pack/amd64.yaml \
+		-name smartagent -version $(VERSION) \
+		-workdir $(OUTDIR)/$(VERSION)
 linux.386: prepare
 	GOOS=linux GOARCH=386 CGO_ENABLED=0 go build -ldflags $(LDFLAGS) \
 		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent code/*.go
 	cd $(OUTDIR)/$(VERSION) && fakeroot tar -czvf smartagent_$(VERSION)_linux_386.tar.gz \
-		--warning=no-file-changed *
+		--warning=no-file-changed opt
+	go run contrib/pack/release.go -o $(OUTDIR)/$(VERSION) \
+		-conf contrib/pack/amd64.yaml \
+		-name smartagent -version $(VERSION) \
+		-workdir $(OUTDIR)/$(VERSION)
 aix.ppc64: prepare
 	GOOS=aix GOARCH=ppc64 CGO_ENABLED=0 go build -ldflags $(LDFLAGS) \
 		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent code/*.go
 	cd $(OUTDIR)/$(VERSION) && fakeroot tar -czvf smartagent_$(VERSION)_aix_ppc64.tar.gz \
-		--warning=no-file-changed *
+		--warning=no-file-changed opt
 windows.amd64: prepare
 	GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -ldflags $(LDFLAGS) \
 		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent.exe code/*.go

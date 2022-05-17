@@ -1,0 +1,2 @@
+#!/bin/sh
+/opt/smartagent/bin/smartagent -action install -conf /opt/smartagent/conf/client.conf
