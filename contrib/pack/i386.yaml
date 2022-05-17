@@ -13,5 +13,5 @@ contents:
   - src: $WORKDIR/opt/smartagent/.version
     dst: /opt/smartagent/.version
 scripts:
-  postinstall: /opt/smartagent/bin/smartagent -action install -conf /opt/smartagent/conf/client.conf
-  preremove: /opt/smartagent/bin/smartagent -action uninstall -conf /opt/smartagent/conf/client.conf
+  postinstall: contrib/pack/postinstall
+  preremove: contrib/pack/preremove

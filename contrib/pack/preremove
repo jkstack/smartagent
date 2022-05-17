@@ -1,0 +1,2 @@
+#!/bin/sh
+/opt/smartagent/bin/smartagent -action uninstall -conf /opt/smartagent/conf/client.conf
