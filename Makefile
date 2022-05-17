@@ -25,11 +25,17 @@ linux.amd64: prepare
 		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent code/*.go
 	cd $(OUTDIR)/$(VERSION) && fakeroot tar -czvf smartagent_$(VERSION)_linux_amd64.tar.gz \
 		--warning=no-file-changed *
+	go run contrib/pack/release.go -o $(OUTDIR)/$(VERSION) \
+		-conf contrib/pack/amd64.yaml \
+		-name smartagent -version $(VERSION)
 linux.386: prepare
 	GOOS=linux GOARCH=386 CGO_ENABLED=0 go build -ldflags $(LDFLAGS) \
 		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent code/*.go
 	cd $(OUTDIR)/$(VERSION) && fakeroot tar -czvf smartagent_$(VERSION)_linux_386.tar.gz \
 		--warning=no-file-changed *
+	go run contrib/pack/release.go -o $(OUTDIR)/$(VERSION) \
+		-conf contrib/pack/amd64.yaml \
+		-name smartagent -version $(VERSION)
 aix.ppc64: prepare
 	GOOS=aix GOARCH=ppc64 CGO_ENABLED=0 go build -ldflags $(LDFLAGS) \
 		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent code/*.go
