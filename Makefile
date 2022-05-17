@@ -35,7 +35,7 @@ linux.386: prepare
 	cd $(OUTDIR)/$(VERSION) && fakeroot tar -czvf smartagent_$(VERSION)_linux_386.tar.gz \
 		--warning=no-file-changed opt
 	go run contrib/pack/release.go -o $(OUTDIR)/$(VERSION) \
-		-conf contrib/pack/amd64.yaml \
+		-conf contrib/pack/i386.yaml \
 		-name smartagent -version $(VERSION) \
 		-workdir $(OUTDIR)/$(VERSION)
 aix.ppc64: prepare
