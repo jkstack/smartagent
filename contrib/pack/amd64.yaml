@@ -10,6 +10,8 @@ contents:
   - src: release/$VERSION/opt/smartagent/conf/client.conf
     dst: /opt/smartagent/conf/client.conf
     type: config|noreplace
+  - src: release/$VERSION/opt/smartagent/.version
+    dst: /opt/smartagent/.version
 scripts:
   postinstall: /opt/smartagent/bin/smartagent -action install -conf /opt/smartagent/conf/client.conf
   preremove: /opt/smartagent/bin/smartagent -action uninstall -conf /opt/smartagent/conf/client.conf
