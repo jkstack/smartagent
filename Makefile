@@ -27,7 +27,8 @@ linux.amd64: prepare
 		--warning=no-file-changed *
 	go run contrib/pack/release.go -o $(OUTDIR)/$(VERSION) \
 		-conf contrib/pack/amd64.yaml \
-		-name smartagent -version $(VERSION)
+		-name smartagent -version $(VERSION) \
+		-workdir $(OUTDIR)/$(VERSION)
 linux.386: prepare
 	GOOS=linux GOARCH=386 CGO_ENABLED=0 go build -ldflags $(LDFLAGS) \
 		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent code/*.go
@@ -35,7 +36,8 @@ linux.386: prepare
 		--warning=no-file-changed *
 	go run contrib/pack/release.go -o $(OUTDIR)/$(VERSION) \
 		-conf contrib/pack/amd64.yaml \
-		-name smartagent -version $(VERSION)
+		-name smartagent -version $(VERSION) \
+		-workdir $(OUTDIR)/$(VERSION)
 aix.ppc64: prepare
 	GOOS=aix GOARCH=ppc64 CGO_ENABLED=0 go build -ldflags $(LDFLAGS) \
 		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent code/*.go
