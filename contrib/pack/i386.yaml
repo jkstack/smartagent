@@ -5,12 +5,12 @@ platform: linux
 maintainer: liwenchao <liwenchao@jkstack.com>
 description: jkstack smartagent
 contents:
-  - src: release/$VERSION/opt/smartagent/bin/smartagent
+  - src: $WORKDIR/opt/smartagent/bin/smartagent
     dst: /opt/smartagent/bin/smartagent
-  - src: release/$VERSION/opt/smartagent/conf/client.conf
+  - src: $WORKDIR/opt/smartagent/conf/client.conf
     dst: /opt/smartagent/conf/client.conf
     type: config|noreplace
-  - src: release/$VERSION/opt/smartagent/.version
+  - src: $WORKDIR/opt/smartagent/.version
     dst: /opt/smartagent/.version
 scripts:
   postinstall: /opt/smartagent/bin/smartagent -action install -conf /opt/smartagent/conf/client.conf

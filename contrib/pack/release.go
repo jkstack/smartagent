@@ -15,24 +15,30 @@ import (
 )
 
 func main() {
-	conf := flag.String("conf", "", "配置文件路径")
-	out := flag.String("o", "release", "输出目录")
-	name := flag.String("name", "smartagent", "输出文件前缀")
-	version := flag.String("version", "1.0", "版本号")
+	conf := flag.String("conf", "", "config file dir")
+	out := flag.String("o", "release", "output dir")
+	name := flag.String("name", "smartagent", "project name")
+	version := flag.String("version", "1.0", "version")
+	workdir := flag.String("workdir", "", "work dir")
 	flag.Parse()
 
 	if len(*conf) <= 1 {
-		fmt.Println("缺少-conf参数")
+		fmt.Println("missing [-conf] param")
 		os.Exit(1)
 	}
 
 	if len(*name) == 0 {
-		fmt.Println("缺少-name参数")
+		fmt.Println("missing [-name] param")
 		os.Exit(1)
 	}
 
 	if len(*version) == 0 {
-		fmt.Println("缺少-version参数")
+		fmt.Println("missing [-version] param")
+		os.Exit(1)
+	}
+
+	if len(*workdir) == 0 {
+		fmt.Println("missing [-workdir] param")
 		os.Exit(1)
 	}
 
@@ -45,7 +51,7 @@ func main() {
 	info.Version = *version
 
 	for i, ct := range info.Contents {
-		ct.Source = strings.ReplaceAll(ct.Source, "$VERSION", *version)
+		ct.Source = strings.ReplaceAll(ct.Source, "$WORKDIR", *workdir)
 		info.Contents[i] = ct
 	}
 
