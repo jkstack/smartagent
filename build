@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION="2.0.1"
+VERSION="2.0.2"
 BRANCH=`git rev-parse --abbrev-ref HEAD`
 HASH=`git log -n1 --pretty=format:%h`
 REVERSION=`git log --oneline|wc -l|tr -d ' '`

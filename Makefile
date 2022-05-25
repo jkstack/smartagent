@@ -2,7 +2,7 @@
 
 OUTDIR=$(shell realpath release)
 
-VERSION=2.0.1
+VERSION=2.0.2
 TIMESTAMP=`date +%s`
 
 BRANCH=`git rev-parse --abbrev-ref HEAD`
@@ -16,6 +16,7 @@ LDFLAGS="-X 'main.gitBranch=$(BRANCH)' \
 -X 'main.version=$(VERSION)'"
 
 all: distclean linux.amd64 linux.386 aix.ppc64 windows.amd64 windows.386 msi.amd64 msi.386
+	patch -R -d vendor/github.com/kardianos/service < patch/upstart.patch
 	cp CHANGELOG.md $(OUTDIR)/CHANGELOG.md
 	rm -fr $(OUTDIR)/$(VERSION)/etc $(OUTDIR)/$(VERSION)/opt
 version:
@@ -102,6 +103,7 @@ prepare:
 	cp conf/client.conf $(OUTDIR)/$(VERSION)/opt/smartagent/conf/client.conf
 	echo $(VERSION) > $(OUTDIR)/$(VERSION)/opt/smartagent/.version
 	go mod vendor
+	patch -d vendor/github.com/kardianos/service < patch/upstart.patch
 distclean:
 	rm -fr $(OUTDIR) src
 docker: distclean linux.amd64

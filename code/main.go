@@ -77,7 +77,7 @@ func main() {
 	case "install":
 		runtime.Assert(svr.Install())
 	case "uninstall":
-		runtime.Assert(svr.Stop())
+		svr.Stop()
 		runtime.Assert(svr.Uninstall())
 	default:
 		runtime.Assert(svr.Run())
