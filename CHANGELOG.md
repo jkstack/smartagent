@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.0.2
+
+1. 修正当服务未启动时执行-action uninstall报错的问题
+2. 修正使用upstart注册系统服务时无法启动的问题
+
 ## 2.0.1
 
 1. 修复linux系统下cgroups配置无法更新的问题
