@@ -1,7 +1,11 @@
---- service_upstart_linux.go	2022-05-17 17:11:33.484590862 +0800
-+++ service_upstart_linux.fix.go	2022-05-25 15:05:10.436410784 +0800
-@@ -245,7 +245,7 @@ respawn
- respawn limit 10 5
+--- service_upstart_linux.go	2022-05-27 15:25:20.482456703 +0800
++++ service_upstart_linux.fix.go	2022-05-27 15:26:46.224000331 +0800
+@@ -242,10 +242,10 @@ stop on runlevel [!2345]
+ {{if and .UserName .HasSetUIDStanza}}setuid {{.UserName}}{{end}}
+ 
+ respawn
+-respawn limit 10 5
++post-stop exec sleep 5
  umask 022
  
 -console none
