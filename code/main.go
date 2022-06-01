@@ -75,10 +75,16 @@ func main() {
 
 	switch *act {
 	case "install":
-		runtime.Assert(svr.Install())
+		if svr.Install() != nil {
+			svr.Uninstall()
+			runtime.Assert(svr.Install())
+		}
 	case "uninstall":
 		svr.Stop()
-		runtime.Assert(svr.Uninstall())
+		err := svr.Uninstall()
+		if err != nil {
+			fmt.Printf("service uninstall failed: %v\n", err)
+		}
 	default:
 		runtime.Assert(svr.Run())
 	}
