@@ -1,5 +1,5 @@
---- service_upstart_linux.go	2022-05-27 15:25:20.482456703 +0800
-+++ service_upstart_linux.fix.go	2022-05-27 15:26:46.224000331 +0800
+--- service_upstart_linux.go	2022-05-30 17:46:47.843530283 +0800
++++ service_upstart_linux.fix.go	2022-06-01 14:05:42.269563760 +0800
 @@ -242,10 +242,10 @@ stop on runlevel [!2345]
  {{if and .UserName .HasSetUIDStanza}}setuid {{.UserName}}{{end}}
  
@@ -13,3 +13,11 @@
  
  pre-start script
      test -x {{.Path}} || { stop; exit 0; }
+@@ -264,6 +264,6 @@ script
+ 		set +a
+ 	fi
+ 
+-	exec {{if and .UserName (not .HasSetUIDStanza)}}sudo -E -u {{.UserName}} {{end}}{{.Path}}{{range .Arguments}} {{.|cmd}}{{end}}{{if .LogOutput}} >> $stdout_log 2>> $stderr_log{{end}}
++	exec {{if and .UserName (not .HasSetUIDStanza)}}su {{.UserName}} -c {{end}}'{{.Path}}{{range .Arguments}} {{.|cmd}}{{end}}{{if .LogOutput}} >> $stdout_log 2>> $stderr_log{{end}}'
+ end script
+ `
