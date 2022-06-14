@@ -35,6 +35,7 @@ func (app *app) SendCome(conn *websocket.Conn) {
 	}
 	msg.Come = &anet.ComePayload{
 		ID:              app.cfg.ID,
+		Name:            "smartagent",
 		Version:         app.version,
 		IP:              ip,
 		MAC:             utils.GetMac(ip),
