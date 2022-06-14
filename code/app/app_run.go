@@ -59,7 +59,7 @@ func (app *app) start() {
 
 	for {
 		app.run()
-		time.Sleep(time.Second)
+		time.Sleep(5 * time.Second)
 	}
 }
 
@@ -97,6 +97,7 @@ func (app *app) connect() *websocket.Conn {
 	logging.Info("%s connected", app.cfg.Server)
 	redirect, err := app.waitHandshake(conn, time.Minute)
 	if err != nil {
+		conn.Close()
 		logging.Error("wait handshake: %v", err)
 		return nil
 	}
