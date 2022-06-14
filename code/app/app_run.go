@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
 	rt "runtime"
 	"time"
 
@@ -57,10 +58,11 @@ func (app *app) start() {
 
 	defer utils.Recover("service")
 
-	for {
+	for i := 0; i < 10; i++ {
 		app.run()
 		time.Sleep(5 * time.Second)
 	}
+	os.Exit(255)
 }
 
 func (app *app) stop() {
