@@ -58,12 +58,13 @@ windows.amd64: prepare
 		-INPUTCHARSET UTF8 contrib/win.nsi
 	mv contrib/smartagent_$(VERSION)_windows_amd64.exe $(OUTDIR)/$(VERSION)/smartagent_$(VERSION)_windows_amd64.exe
 windows.386: prepare
-	mkdir -p src/agent && cp -R code vendor src/agent
+	mkdir -p src/agent && cp -R code vendor src/agent && cp main.go src/main.go
+	cp -R vendor/* src/
 	patch -d src/agent/vendor/github.com/shirou/gopsutil/cpu < patch/strings.replaceall.patch
 	patch -d src/agent/vendor/github.com/shirou/gopsutil/v3/host < patch/host.patch
 	patch -d src/agent/vendor/github.com/shirou/gopsutil/v3/process < patch/process.patch
 	GOPATH=$(shell realpath .) GOOS=windows GOARCH=386 CGO_ENABLED=0 go10 build -ldflags $(LDFLAGS) \
-		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent.exe src/agent/main.go
+		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent.exe src/main.go
 	patch -R -d src/agent/vendor/github.com/shirou/gopsutil/cpu < patch/strings.replaceall.patch
 	patch -R -d src/agent/vendor/github.com/shirou/gopsutil/v3/host < patch/host.patch
 	patch -R -d src/agent/vendor/github.com/shirou/gopsutil/v3/process < patch/process.patch
@@ -84,12 +85,13 @@ msi.amd64: prepare
 		-v contrib/win.wxs
 	mv build.msi $(OUTDIR)/$(VERSION)/smartagent_$(VERSION)_windows_amd64.msi
 msi.386: prepare
-	mkdir -p src/agent && cp -R code vendor src/agent
+	mkdir -p src/agent && cp -R code vendor src/agent && cp main.go src/main.go
+	cp -R vendor/* src/
 	patch -d src/agent/vendor/github.com/shirou/gopsutil/cpu < patch/strings.replaceall.patch
 	patch -d src/agent/vendor/github.com/shirou/gopsutil/v3/host < patch/host.patch
 	patch -d src/agent/vendor/github.com/shirou/gopsutil/v3/process < patch/process.patch
 	GOPATH=$(shell realpath .) GOOS=windows GOARCH=386 CGO_ENABLED=0 go10 build -ldflags $(LDFLAGS) \
-		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent.exe src/agent/main.go
+		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent.exe src/main.go
 	patch -R -d src/agent/vendor/github.com/shirou/gopsutil/cpu < patch/strings.replaceall.patch
 	patch -R -d src/agent/vendor/github.com/shirou/gopsutil/v3/host < patch/host.patch
 	patch -R -d src/agent/vendor/github.com/shirou/gopsutil/v3/process < patch/process.patch
