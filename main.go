@@ -1,3 +1,5 @@
+//go:generate goversioninfo -icon=contrib/install.ico -manifest=contrib/agent.manifest contrib/versioninfo.json
+
 package main
 
 import (

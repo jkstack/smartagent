@@ -2,8 +2,12 @@
 
 OUTDIR=$(shell realpath release)
 
-VERSION=2.0.5
+VERSION=2.0.6
 TIMESTAMP=`date +%s`
+
+MAJOR=`echo $(VERSION)|cut -d'.' -f1`
+MINOR=`echo $(VERSION)|cut -d'.' -f2`
+PATCH=`echo $(VERSION)|cut -d'.' -f3`
 
 BRANCH=`git rev-parse --abbrev-ref HEAD`
 HASH=`git log -n1 --pretty=format:%h`
@@ -23,7 +27,7 @@ version:
 	@echo $(VERSION)
 linux.amd64: prepare
 	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags $(LDFLAGS) \
-		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent code/*.go
+		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent main.go
 	cd $(OUTDIR)/$(VERSION) && fakeroot tar -czvf smartagent_$(VERSION)_linux_amd64.tar.gz \
 		--warning=no-file-changed opt
 	go run contrib/pack/release.go -o $(OUTDIR)/$(VERSION) \
@@ -32,7 +36,7 @@ linux.amd64: prepare
 		-workdir $(OUTDIR)/$(VERSION)
 linux.386: prepare
 	GOOS=linux GOARCH=386 CGO_ENABLED=0 go build -ldflags $(LDFLAGS) \
-		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent code/*.go
+		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent main.go
 	cd $(OUTDIR)/$(VERSION) && fakeroot tar -czvf smartagent_$(VERSION)_linux_386.tar.gz \
 		--warning=no-file-changed opt
 	go run contrib/pack/release.go -o $(OUTDIR)/$(VERSION) \
@@ -41,12 +45,12 @@ linux.386: prepare
 		-workdir $(OUTDIR)/$(VERSION)
 aix.ppc64: prepare
 	GOOS=aix GOARCH=ppc64 CGO_ENABLED=0 go build -ldflags $(LDFLAGS) \
-		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent code/*.go
+		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent main.go
 	cd $(OUTDIR)/$(VERSION) && fakeroot tar -czvf smartagent_$(VERSION)_aix_ppc64.tar.gz \
 		--warning=no-file-changed opt
 windows.amd64: prepare
 	GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -ldflags $(LDFLAGS) \
-		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent.exe code/*.go
+		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent.exe main.go
 	unix2dos conf/client.conf
 	makensis -DARCH=amd64 \
 		-DPRODUCT_VERSION=$(VERSION) \
@@ -59,7 +63,7 @@ windows.386: prepare
 	patch -d src/agent/vendor/github.com/shirou/gopsutil/v3/host < patch/host.patch
 	patch -d src/agent/vendor/github.com/shirou/gopsutil/v3/process < patch/process.patch
 	GOPATH=$(shell realpath .) GOOS=windows GOARCH=386 CGO_ENABLED=0 go10 build -ldflags $(LDFLAGS) \
-		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent.exe src/agent/code/*.go
+		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent.exe src/agent/main.go
 	patch -R -d src/agent/vendor/github.com/shirou/gopsutil/cpu < patch/strings.replaceall.patch
 	patch -R -d src/agent/vendor/github.com/shirou/gopsutil/v3/host < patch/host.patch
 	patch -R -d src/agent/vendor/github.com/shirou/gopsutil/v3/process < patch/process.patch
@@ -72,7 +76,7 @@ windows.386: prepare
 	rm -fr src
 msi.amd64: prepare
 	GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -ldflags $(LDFLAGS) \
-		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent.exe code/*.go
+		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent.exe main.go
 	unix2dos conf/client.conf
 	wixl -D PRODUCT_VERSION=$(VERSION) \
 		-D RELEASE_DIR=$(OUTDIR)/$(VERSION)/opt/smartagent \
@@ -85,7 +89,7 @@ msi.386: prepare
 	patch -d src/agent/vendor/github.com/shirou/gopsutil/v3/host < patch/host.patch
 	patch -d src/agent/vendor/github.com/shirou/gopsutil/v3/process < patch/process.patch
 	GOPATH=$(shell realpath .) GOOS=windows GOARCH=386 CGO_ENABLED=0 go10 build -ldflags $(LDFLAGS) \
-		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent.exe src/agent/code/*.go
+		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent.exe src/agent/main.go
 	patch -R -d src/agent/vendor/github.com/shirou/gopsutil/cpu < patch/strings.replaceall.patch
 	patch -R -d src/agent/vendor/github.com/shirou/gopsutil/v3/host < patch/host.patch
 	patch -R -d src/agent/vendor/github.com/shirou/gopsutil/v3/process < patch/process.patch
@@ -104,6 +108,11 @@ prepare:
 	echo $(VERSION) > $(OUTDIR)/$(VERSION)/opt/smartagent/.version
 	go mod vendor
 	patch -d vendor/github.com/kardianos/service < patch/upstart.patch
+	sed -i "s|#MAJOR|$(MAJOR)|g" contrib/versioninfo.json
+	sed -i "s|#MINOR|$(MINOR)|g" contrib/versioninfo.json
+	sed -i "s|#PATCH|$(PATCH)|g" contrib/versioninfo.json
+	sed -i "s|#VERSION|v$(VERSION)|g" contrib/versioninfo.json
+	go generate
 distclean:
 	rm -fr $(OUTDIR) src
 docker: distclean linux.amd64
