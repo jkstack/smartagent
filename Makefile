@@ -50,7 +50,7 @@ aix.ppc64: prepare
 		--warning=no-file-changed opt
 windows.amd64: prepare
 	GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -ldflags $(LDFLAGS) \
-		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent.exe main.go
+		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent.exe
 	unix2dos conf/client.conf
 	makensis -DARCH=amd64 \
 		-DPRODUCT_VERSION=$(VERSION) \
@@ -77,7 +77,7 @@ windows.386: prepare
 	rm -fr src
 msi.amd64: prepare
 	GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -ldflags $(LDFLAGS) \
-		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent.exe main.go
+		-o $(OUTDIR)/$(VERSION)/opt/smartagent/bin/smartagent.exe
 	unix2dos conf/client.conf
 	wixl -D PRODUCT_VERSION=$(VERSION) \
 		-D RELEASE_DIR=$(OUTDIR)/$(VERSION)/opt/smartagent \
