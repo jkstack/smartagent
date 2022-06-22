@@ -11,4 +11,4 @@ LDFLAGS="-X 'main.gitBranch=$BRANCH'
 -X 'main.version=$VERSION'"
 
 mkdir -p bin
-go build -mod vendor -ldflags "$LDFLAGS" -o bin/agent code/*.go
+go build -mod vendor -ldflags "$LDFLAGS" -o bin/agent main.go
