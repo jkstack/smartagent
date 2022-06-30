@@ -206,8 +206,6 @@ github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 h1:BQSFePA1RWJOl
 github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99/go.mod h1:1lJo3i6rXxKeerYnT8Nvf0QmHCRC1n8sfWVwXF2Frvo=
 github.com/jessevdk/go-flags v1.4.0/go.mod h1:4FA24M0QyGHXBuZZK/XkWh8h0e1EYbRYJSGM75WSRxI=
 github.com/jessevdk/go-flags v1.5.0/go.mod h1:Fw0T6WPc1dYxT4mKEZRfG5kJhaTDP9pj1c2EWnYs/m4=
-github.com/jkstack/anet v0.0.0-20220425074031-0850fcf432c2 h1:s+7lREpXiZIs+Inp1gwCPTUy3tz9+VZuhySOGwqaRsI=
-github.com/jkstack/anet v0.0.0-20220425074031-0850fcf432c2/go.mod h1:zpkHPpKpEdaNNLLLabhWdyjRcczZYwPLocie5ys/RTc=
 github.com/jkstack/anet v0.0.0-20220614071307-455a8dc904ec h1:cjprnYYUlwo1jZzDYuFOUmX9l86LF4m7+kvB/lXa6d4=
 github.com/jkstack/anet v0.0.0-20220614071307-455a8dc904ec/go.mod h1:zpkHPpKpEdaNNLLLabhWdyjRcczZYwPLocie5ys/RTc=
 github.com/jonboulle/clockwork v0.1.0/go.mod h1:Ii8DK3G1RaLaWxj9trq07+26W01tbo22gdxWY5EU2bo=
