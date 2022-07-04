@@ -15,8 +15,8 @@ require (
 	github.com/lwch/runtime v0.0.0-20190520054850-8c97e19e0c6d
 	github.com/opencontainers/runtime-spec v1.0.2
 	github.com/shirou/gopsutil v3.21.11+incompatible
-	github.com/shirou/gopsutil/v3 v3.22.1
-	gopkg.in/yaml.v3 v3.0.0
+	github.com/shirou/gopsutil/v3 v3.22.6
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
@@ -57,14 +57,14 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/power-devops/perfstat v0.0.0-20220216144756-c35f1ee13d7c // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
-	github.com/tklauser/go-sysconf v0.3.9 // indirect
+	github.com/tklauser/go-sysconf v0.3.10 // indirect
 	github.com/tklauser/numcpus v0.4.0 // indirect
 	github.com/ulikunitz/xz v0.5.10 // indirect
 	github.com/xanzy/ssh-agent v0.3.1 // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519 // indirect
 	golang.org/x/net v0.0.0-20211007125505-59d4e928ea9d // indirect
-	golang.org/x/sys v0.0.0-20220224003255-dbe011f71a99 // indirect
+	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
