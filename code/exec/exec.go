@@ -71,6 +71,7 @@ func (ex *Executor) Exec(data []byte, msg anet.Msg) {
 		defer utils.Recover("exec")
 		ex.reporter.IncRunning()
 		defer ex.reporter.DecRunning()
+		ex.reporter.UsePlugin(msg.Plugin.Name)
 		ex.run(data, msg)
 	}()
 }
@@ -128,7 +129,7 @@ func (ex *Executor) exec(dir, args string, msg anet.Msg, logger logging.Logger) 
 		return
 	}
 	go log(rstderr, logger)
-	go send(rstdout, ex.chWrite)
+	go send(rstdout, ex.chWrite, ex.reporter, msg.Plugin.Name)
 
 	pid := cmd.Process.Pid
 
