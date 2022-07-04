@@ -19,27 +19,31 @@ import (
 )
 
 const (
-	defaultServer      = "127.0.0.1:13081"
-	defaultUser        = "nobody"
-	defaultLogSize     = utils.Bytes(50 * 1000 * 1000)
-	defaultLogRotate   = 7
-	defaultCpuLimit    = 100
-	defaultMemoryLimit = utils.Bytes(512 * 1000 * 1000)
+	defaultServer               = "127.0.0.1:13081"
+	defaultUser                 = "nobody"
+	defaultLogSize              = utils.Bytes(50 * 1000 * 1000)
+	defaultLogRotate            = 7
+	defaultCpuLimit             = 100
+	defaultMemoryLimit          = utils.Bytes(512 * 1000 * 1000)
+	defaultStatusReport         = true
+	defaultStatusReportInterval = utils.Duration(5 * time.Second)
 )
 
 type Configure struct {
-	ID          string      `kv:"id"`
-	Server      string      `kv:"server"`
-	User        string      `kv:"user"`
-	PluginDir   string      `kv:"plugin_dir"`
-	LogDir      string      `kv:"log_dir"`
-	LogSize     utils.Bytes `kv:"log_size"`
-	LogRotate   int         `kv:"log_rotate"`
-	CpuLimit    int         `kv:"cpu_limit"`
-	MemoryLimit utils.Bytes `kv:"memory_limit"`
-	dir         string
-	UID         uint32 `kv:"-"` // user id of user
-	GID         uint32 `kv:"-"` // group id of user
+	ID                   string         `kv:"id"`
+	Server               string         `kv:"server"`
+	User                 string         `kv:"user"`
+	PluginDir            string         `kv:"plugin_dir"`
+	LogDir               string         `kv:"log_dir"`
+	LogSize              utils.Bytes    `kv:"log_size"`
+	LogRotate            int            `kv:"log_rotate"`
+	CpuLimit             int            `kv:"cpu_limit"`
+	MemoryLimit          utils.Bytes    `kv:"memory_limit"`
+	StatusReport         bool           `kv:"status_report"`
+	StatusReportInterval utils.Duration `kv:"status_report_interval"`
+	dir                  string
+	UID                  uint32 `kv:"-"` // user id of user
+	GID                  uint32 `kv:"-"` // group id of user
 }
 
 func Load(dir, abs string) *Configure {
@@ -110,6 +114,10 @@ func (cfg *Configure) check(abs string) {
 	if cfg.MemoryLimit == 0 {
 		logging.Info("reset conf.memory_limit to default size: %s", defaultMemoryLimit.String())
 		cfg.MemoryLimit = defaultMemoryLimit
+	}
+	if cfg.StatusReportInterval == 0 {
+		logging.Info("reset conf.report_status_interval to default size: %s", defaultStatusReportInterval.String())
+		cfg.StatusReportInterval = defaultStatusReportInterval
 	}
 }
 
