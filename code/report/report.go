@@ -125,10 +125,9 @@ func (data *Data) basicInfo(info *anet.AgentInfo) {
 	debug.ReadGCStats(&gc)
 
 	quantiles := make(map[string]float64)
-	for idx, pq := range gc.PauseQuantiles[1:] {
-		quantiles[fmt.Sprintf("%d", int(float64(idx+1)/float64(len(gc.PauseQuantiles)-1)*100.))] = pq.Seconds()
+	for i := 0; i < 5; i++ {
+		quantiles[fmt.Sprintf("%d", i*25)] = gc.PauseQuantiles[i].Seconds()
 	}
-	quantiles["0"] = gc.PauseQuantiles[0].Seconds()
 	info.GC = quantiles
 
 	info.InPackets = data.inPackets
