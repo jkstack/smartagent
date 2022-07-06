@@ -25,7 +25,7 @@ const (
 	defaultLogRotate            = 7
 	defaultCpuLimit             = 100
 	defaultMemoryLimit          = utils.Bytes(512 * 1000 * 1000)
-	defaultStatusReport         = true
+	defaultStatusReport         = false
 	defaultStatusReportInterval = utils.Duration(5 * time.Second)
 )
 
