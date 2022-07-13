@@ -2,7 +2,7 @@
 
 OUTDIR=$(shell realpath release)
 
-VERSION=2.0.6
+VERSION=2.0.7
 TIMESTAMP=`date +%s`
 
 MAJOR=`echo $(VERSION)|cut -d'.' -f1`
