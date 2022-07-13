@@ -3,6 +3,7 @@ package exec
 import (
 	"agent/code/conf"
 	"agent/code/plugin"
+	"agent/code/report"
 	"agent/code/utils"
 	"fmt"
 	"io"
@@ -27,15 +28,17 @@ type Executor struct {
 	pids       map[int]string            // pid => name
 	chWrite    chan []byte
 	mgr        *plugin.Mgr
+	reporter   *report.Data
 }
 
-func New(cfg *conf.Configure) *Executor {
+func New(cfg *conf.Configure, reporter *report.Data) *Executor {
 	ex := &Executor{
-		cfg:     cfg,
-		logger:  make(map[string]logging.Logger),
-		pids:    make(map[int]string),
-		chWrite: make(chan []byte, writeBufferSize),
-		mgr:     plugin.New(cfg),
+		cfg:      cfg,
+		logger:   make(map[string]logging.Logger),
+		pids:     make(map[int]string),
+		chWrite:  make(chan []byte, writeBufferSize),
+		mgr:      plugin.New(cfg),
+		reporter: reporter,
 	}
 	ex.init(cfg)
 	return ex
@@ -66,6 +69,9 @@ func (ex *Executor) ChWrite() <-chan []byte {
 func (ex *Executor) Exec(data []byte, msg anet.Msg) {
 	go func() {
 		defer utils.Recover("exec")
+		ex.reporter.IncRunning()
+		defer ex.reporter.DecRunning()
+		ex.reporter.UsePlugin(msg.Plugin.Name)
 		ex.run(data, msg)
 	}()
 }
@@ -123,7 +129,7 @@ func (ex *Executor) exec(dir, args string, msg anet.Msg, logger logging.Logger) 
 		return
 	}
 	go log(rstderr, logger)
-	go send(rstdout, ex.chWrite)
+	go send(rstdout, ex.chWrite, ex.reporter, msg.Plugin.Name)
 
 	pid := cmd.Process.Pid
 

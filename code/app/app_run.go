@@ -3,6 +3,7 @@ package app
 import (
 	"agent/code/conf"
 	"agent/code/exec"
+	"agent/code/report"
 	"agent/code/utils"
 	"context"
 	"encoding/json"
@@ -34,14 +35,17 @@ type app struct {
 	remote   *websocket.Conn
 	executor *exec.Executor
 	// runtime
-	chWrite chan *anet.Msg
+	chWrite  chan *anet.Msg
+	reporter *report.Data
 }
 
 func new(cfg *conf.Configure, version string) *app {
+	reporter := report.New(version)
 	app := &app{
 		version:  version,
 		cfg:      cfg,
-		executor: exec.New(cfg),
+		executor: exec.New(cfg, reporter),
+		reporter: reporter,
 	}
 	app.init(cfg)
 	return app
@@ -88,6 +92,9 @@ func (app *app) run() {
 	go app.write(ctx, cancel)
 	go app.print(ctx)
 	go app.keepalive(ctx)
+	if app.cfg.StatusReport {
+		go app.report(ctx)
+	}
 	<-ctx.Done()
 }
 
@@ -124,6 +131,10 @@ func (app *app) read(ctx context.Context, cancel context.CancelFunc) {
 			logging.Error("read message: %v", err)
 			return
 		}
+
+		app.reporter.IncInPackets()
+		app.reporter.IncInBytes(uint64(len(data)))
+
 		var msg anet.Msg
 		err = json.Unmarshal(data, &msg)
 		if err != nil {
@@ -143,6 +154,7 @@ func (app *app) write(ctx context.Context, cancel context.CancelFunc) {
 		cancel()
 	}()
 	for {
+		var data []byte
 		var err error
 		select {
 		case <-ctx.Done():
@@ -151,8 +163,11 @@ func (app *app) write(ctx context.Context, cancel context.CancelFunc) {
 			if msg == nil {
 				continue
 			}
-			err = app.remote.WriteJSON(msg)
-		case data := <-app.executor.ChWrite():
+			data, err = json.Marshal(msg)
+			if err == nil {
+				err = app.remote.WriteMessage(websocket.TextMessage, data)
+			}
+		case data = <-app.executor.ChWrite():
 			if len(data) == 0 {
 				continue
 			}
@@ -162,6 +177,9 @@ func (app *app) write(ctx context.Context, cancel context.CancelFunc) {
 			logging.Error("write message: %v", err)
 			return
 		}
+
+		app.reporter.IncOutPackets()
+		app.reporter.IncOutBytes(uint64(len(data)))
 	}
 }
 
@@ -190,6 +208,19 @@ func (app *app) keepalive(ctx context.Context) {
 			return
 		case <-tk.C:
 			app.remote.WriteControl(websocket.PingMessage, nil, time.Now().Add(2*time.Second))
+		}
+	}
+}
+
+func (app *app) report(ctx context.Context) {
+	tk := time.NewTicker(app.cfg.StatusReportInterval.Duration())
+	defer tk.Stop()
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-tk.C:
+			app.reporter.Report(app.chWrite)
 		}
 	}
 }

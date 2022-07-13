@@ -1,6 +1,7 @@
 package exec
 
 import (
+	"agent/code/report"
 	"bufio"
 	"encoding/binary"
 	"encoding/json"
@@ -24,7 +25,7 @@ func log(r io.Reader, logger logging.Logger) {
 	}
 }
 
-func send(r io.Reader, ch chan []byte) {
+func send(r io.Reader, ch chan []byte, reporter *report.Data, name string) {
 	for {
 		var hdr struct {
 			Len   uint32
@@ -39,6 +40,7 @@ func send(r io.Reader, ch chan []byte) {
 		if err != nil {
 			return
 		}
+		reporter.PluginReply(name, uint64(hdr.Len))
 		if crc32.ChecksumIEEE(data) != hdr.Crc32 {
 			logging.Error("invalid crc32")
 			return

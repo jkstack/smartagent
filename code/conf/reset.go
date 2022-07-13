@@ -39,6 +39,10 @@ func Reset(dir, server string) {
 	fmt.Printf("cpu_limit=%d\n", cfg.CpuLimit)
 	cfg.MemoryLimit = defaultMemoryLimit
 	fmt.Printf("memory_limit=%s\n", cfg.MemoryLimit.String())
+	cfg.StatusReport = defaultStatusReport
+	fmt.Printf("status_report=%t\n", cfg.StatusReport)
+	cfg.StatusReportInterval = defaultStatusReportInterval
+	fmt.Printf("status_report_interval=%s\n", cfg.StatusReportInterval.String())
 
 	f, err := os.Create(dir)
 	runtime.Assert(err)
