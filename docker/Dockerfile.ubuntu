@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM ubuntu:22.04
 
 ADD bin/smartagent /usr/bin
 ADD conf/client.conf /etc
