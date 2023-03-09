@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.0.8
+
+修正websocket连接断开问题
+
 ## 2.0.7
 
 1. 增加agent监控信息上报
