@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"os"
 	rt "runtime"
+	"sync"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -35,8 +36,9 @@ type app struct {
 	remote   *websocket.Conn
 	executor *exec.Executor
 	// runtime
-	chWrite  chan *anet.Msg
-	reporter *report.Data
+	chWrite    chan *anet.Msg
+	reporter   *report.Data
+	mWriteLock sync.Mutex
 }
 
 func new(cfg *conf.Configure, version string) *app {
@@ -165,13 +167,17 @@ func (app *app) write(ctx context.Context, cancel context.CancelFunc) {
 			}
 			data, err = json.Marshal(msg)
 			if err == nil {
+				app.mWriteLock.Lock()
 				err = app.remote.WriteMessage(websocket.TextMessage, data)
+				app.mWriteLock.Unlock()
 			}
 		case data = <-app.executor.ChWrite():
 			if len(data) == 0 {
 				continue
 			}
+			app.mWriteLock.Lock()
 			err = app.remote.WriteMessage(websocket.TextMessage, data)
+			app.mWriteLock.Unlock()
 		}
 		if err != nil {
 			logging.Error("write message: %v", err)
@@ -207,7 +213,9 @@ func (app *app) keepalive(ctx context.Context) {
 		case <-ctx.Done():
 			return
 		case <-tk.C:
+			app.mWriteLock.Lock()
 			app.remote.WriteControl(websocket.PingMessage, nil, time.Now().Add(2*time.Second))
+			app.mWriteLock.Unlock()
 		}
 	}
 }

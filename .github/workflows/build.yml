@@ -11,4 +11,4 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: jkstack/smartagent-action@1.18.4
+      - uses: jkstack/smartagent-action@1.18.5
